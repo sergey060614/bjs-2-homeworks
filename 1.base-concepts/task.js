@@ -13,9 +13,10 @@ function solveEquation(a, b, c) {
   } else {
     const root1 = (-b + Math.sqrt(d)) / (2 * a);
     const root2 = (-b - Math.sqrt(d)) / (2 * a);
-    arr.push(root1, root2);
-    return arr;
+    arr.push(root1, root2); 
   }
+
+  return arr;
 }
 
 function calculateTotalMortgage(percent, contribution, amount, countMonths) {
@@ -23,7 +24,7 @@ function calculateTotalMortgage(percent, contribution, amount, countMonths) {
   const loanAmount = amount - contribution;
 
   if (loanAmount <= 0) {
-    return Number((0).toFixed(2));
+    return 0;
   }
 
   const monthlyPayment =
