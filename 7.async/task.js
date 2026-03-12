@@ -5,21 +5,14 @@ class AlarmClock {
   }
 
   addClock(time, callback) {
-  if (!time || typeof callback !== "function") {
-    throw new Error("Необходимо задать время и действительную функцию обратного вызова.");
-  }
+    if (!time || typeof callback !== "function") {
+      throw new Error(
+        "Необходимо задать время и действительную функцию обратного вызова."
+      );
+    }
 
-  if (this.alarmCollection.some((clock) => clock.time === time)) {
-    console.warn(`Будильник на время "${time}" уже установлен.`);
-    return;
+    this.alarmCollection.push({ time, callback, canCall: true });
   }
-
-  this.alarmCollection.push({
-    time: time,
-    callback: callback,
-    canCall: true
-  });
-}
 
   removeClock(time) {
     this.alarmCollection = this.alarmCollection.filter(
@@ -35,21 +28,21 @@ class AlarmClock {
   }
 
   start() {
-  if (this.intervalId !== null) {
-    return;
+    if (this.intervalId !== null) {
+      return;
+    }
+
+    this.intervalId = setInterval(() => {
+      const currentTime = this.getCurrentFormattedTime();
+
+      this.alarmCollection.forEach((clock) => {
+        if (clock.time === currentTime && clock.canCall) {
+          clock.canCall = false;
+          clock.callback();
+        }
+      });
+    }, 1000);
   }
-  
-  this.intervalId = setInterval(() => {
-    const currentTime = this.getCurrentFormattedTime();
-    
-    this.alarmCollection.forEach((clock) => {
-      if (clock.time === currentTime && clock.canCall) {
-        clock.canCall = false;
-        clock.callback();
-      }
-    });
-  }, 1000);
-}
 
   stop() {
     if (this.intervalId === null) {
@@ -68,6 +61,5 @@ class AlarmClock {
   clearAlarms() {
     this.alarmCollection = [];
     this.stop();
-    
   }
 }
